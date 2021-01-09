@@ -1,0 +1,45 @@
+{
+  "EN" :{
+    "welcome" : "Welcome to Calculator!",
+    "number1" : "What's your first number?",
+    "number2" : "What's your second number?",
+    "invalid number" : "Hmm... that doesn't look like a valid number.",
+    "operator" : "What operation would you like to perform?\n1.) Add\n2.) Subtract\n3.) Multiply\n4.) Divide\n",
+    "invalid operator" : "Must choose 1, 2, 3 or 4.",
+    "result" : "The result is:", 
+    "continue" : "Would you like to perform another calculation? y/n",
+    "invalid close" : "Hmm... looks like you made a mistake, please enter \"y\" or \"n\".",
+    "goodbye" : "Thank you. Closing Calculator...Goodbye!"
+  },
+  "GER" : {
+    "welcome" : "Willkommen bei Calculator!",
+    "number1" : "Wie lautet Ihre erste Zahl?",
+    "number2" : "Wie lautet Ihre zweite Zahl?",
+    "invalid number" : "Hmm... das sieht nicht wie eine gültige Zahl aus.",
+    "operator" : "Welche Operation möchten Sie durchführen?\n1.) Addieren\n2.) Subtrahieren\n3.) Multiplizieren\n4.) Dividieren\n",
+    "invalid operator" : "Bitte 1, 2, 3 oder 4 wählen.",
+    "result" : "Das Ergebnis ist:", 
+    "continue" : "Möchten Sie eine weitere Berechnung durchführen? y/n",
+    "invalid close" : "Hmm... sieht aus, als hätten Sie einen Fehler gemacht, bitte geben Sie \"y\" or \"n\" ein.",
+    "goodbye" : "Thank you. Closing Calculator...Goodbye!"
+  },
+  "FR" : {
+    "welcome" : "Bienvenue à la Calculatrice!",
+    "number1" : "Quel est votre premier numéro?",
+    "number2" :  "Quel est votre deuxième numéro12?",
+    "invalid number" : "Hmm... ça ne ressemble pas à un numéro valide.",
+    "operator" : "Quelle opération souhaitez-vous effectuer ?\n1.) Add\n2.) Soustraire\n3.) Multiplier\n4.) Diviser\n",
+    "invalid operator" : "Doit choisir 1, 2, 3 ou 4.",
+    "result" : "Le résultat est:", 
+    "continue" : "Voulez-vous effectuer un autre calcul ? y/n",
+    "invalid close" : "Hmm... il semble que vous ayez fait une erreur, veuillez saisir \"y\" or \"n\".",
+    "goodbye" : "Merci. Calculatrice de fermeture... Au revoir !"
+  },
+  "INT" : {
+    "languages": "EN FR GER",
+    "setup" : "Welcome - Willkommen - Bienvenue\nPlease choose your language:\nBitte wählen Sie eine Sprache:\nVeuillez choisir une langue:\nEN: English - Englisch - Anglais\nGER: German - Detusch - Allemand\nFR: French - Französisch - Français"
+  }
+
+
+
+}
