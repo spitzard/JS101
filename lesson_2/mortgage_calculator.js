@@ -22,7 +22,7 @@ function convertYearsToMonths(durationInYears) {
   return Number(durationInYears) * MONTHS_IN_A_YEAR;
 }
 
-function APRToMonthlyInterestRate(APR) {
+function yearlyToMonthlyInterest(APR) {
   return (Number(APR) / MONTHS_IN_A_YEAR / 100);
 
 }
@@ -64,8 +64,7 @@ while (true) {
   }
 
   let months = convertYearsToMonths(loanDurationInYears);
-  let monthlyInterest = APRToMonthlyInterestRate(annualPercentageRate);
-
+  let monthlyInterest = yearlyToMonthlyInterest(annualPercentageRate);
   let payment = monthlyPayment(loanAmount, monthlyInterest, months);
 
   prompt(`Your monthly payment is $ ${payment.toFixed(2)}.`);
