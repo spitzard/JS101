@@ -14,7 +14,6 @@ function isInvalidNumber(inputNumber, caseToCheck) {
     case 'APR':
       return  inputNumber.trimStart() === '' || isNaN(inputNumber) || Number(inputNumber) < 0;
   }
-  console.log('isInvalidNumber is missing the second input argument.');
   return null;
 }
 
