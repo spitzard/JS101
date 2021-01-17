@@ -1,6 +1,5 @@
 const readline = require('readline-sync');
 const VALID_CHOICES = ['rock', 'paper', 'scissors', 'lizard' ,'spock'];
-const VALID_SHORTCUTS = ['r', 'p', 'sc', 'l' ,'sp'];
 const SCORE_TO_WIN = 5;
 const SCORE = { player : 0, computer : 0};
 const ANSWER = { 'next match' : 'y'};
