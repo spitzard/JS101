@@ -8,8 +8,6 @@ function getGrade(score1, score2, score3) {
     case avgScore >= 60: return 'D';
     default: return 'F';
   }
-
 }
-
 console.log(getGrade(95, 90, 93));    // "A"
 console.log(getGrade(50, 50, 95));    // "D"
