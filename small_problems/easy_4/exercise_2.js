@@ -1,6 +1,5 @@
 const readlineSync = require('readline-sync');
 
-
 function getNumber(ordinal) {
   return Number(readlineSync.question(`Enter the ${ordinal} number: `));
 }
