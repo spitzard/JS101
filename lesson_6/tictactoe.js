@@ -75,7 +75,9 @@ function someoneWon(board) {
 }
 
 function displayBoard(board) {
-  console.clear();
+  //console.clear();
+
+  console.log(`You are ${HUMAN_MARKER}. Computer is ${CPU_MARKER}`);
 
   console.log('');
   console.log(`     |     |`);
@@ -91,21 +93,30 @@ function displayBoard(board) {
   console.log('     |     |');
   console.log('');
 }
-let board = initializeBoard();
 
 while (true) {
+  let board = initializeBoard();
+  while (true) {
+    displayBoard(board);
+
+    playerChoosesSquare(board);
+    if (someoneWon(board) || boardFull(board)) break;
+    computerChoosesSquare(board);
+    if (someoneWon(board) || boardFull(board)) break;
+  }
+
   displayBoard(board);
 
-  playerChoosesSquare(board);
-  if (someoneWon(board) || boardFull(board)) break;
-  computerChoosesSquare(board);
+  if (someoneWon(board)) {
+    prompt(`${detectWinner(board)} won!`);
+  } else {
+    prompt("It's a tie!");
+  }
 
-  if (someoneWon(board) || boardFull(board)) break;
-}
-displayBoard(board);
+  prompt('Play again? (y or n)');
+  let answer = readlineSync.question().toLowerCase()[0];
+  if (answer !== 'y') break;
 
-if (someoneWon(board)) {
-  prompt(`${detectWinner(board)} won!`);
-} else {
-  prompt("It's a tie!");
 }
+
+prompt('Thanks for playing Tic Tac Toe!');
