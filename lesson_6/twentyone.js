@@ -1,24 +1,31 @@
-const SUITS = ['heart', 'club' , 'spade', 'diamond'];
-const SUIT_KEYS = ['two','three','four','five','six','seven','eight','nine','ten','jack','king','queen','ace'];
-const SUIT_VALUES = [1, 2, 3, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
+const SUITS = ['Heart', 'Club' , 'Spade', 'Diamond'];
+const CARD_KEYS = ['2','3','4','5','6','7','8','9','10','Jack','King','Queen','Ace'];
+const CARD_VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
 const TWENTY_ONE = 21;
-let deck = {};
-let playerHand = {};
-let dealerHand = {};
+const DEALER_LIMIT = 17;
+let readline = require('readline-sync');
 
-//SUITS.forEach(suit => SUIT_KEYS.forEach((key, idx) => console.log(suit + " " + key + " " + SUIT_VALUES[idx])));
+function initializeCards(number, deck) {
+  let hand = {};
+  for (let cards = 0; cards < number; cards++) hitMe(hand, deck);
+  return hand;
+}
 
 
-SUITS.forEach(function (suit) {
-  let cards = {};
-  SUIT_KEYS.forEach( function(key, idx) {
-    Object.assign(cards, {[key] : SUIT_VALUES[idx]});
+function initializeDeck() {
+  let deck = {};
+  SUITS.forEach(function (suit) {
+    let cards = {};
+    CARD_KEYS.forEach( function(key, idx) {
+      Object.assign(cards, {[key] : CARD_VALUES[idx]});
+    });
+    deck[suit] = cards;
   });
-  deck[suit] = cards;
-});
+  return deck;
+}
 
-function hitMe(player) {
-  let newCard =  drawRandomCard();
+function hitMe(player, deck) {
+  let newCard =  drawRandomCard(deck);
   removeCardFromDeck(newCard,deck);
   let suit = Object.keys(newCard)[0];
   if (!Object.keys(player).includes(suit)) {
@@ -39,7 +46,7 @@ function countCardValues(hand) {
 function hasAce(hand) {
   return Object.keys(hand).filter(suit => {
     let card = Object.keys(hand[suit]);
-    return card[0] === 'ace';
+    return card[0] === 'Ace';
   }).length;
 }
 
@@ -71,50 +78,117 @@ function removeCardFromDeck(card, deck) {
   delete deck[Object.keys(card)][Object.keys(Object.values(card)[0])];
 }
 
-function drawRandomCard() {
-  let card = {};
-  let val = 0;
-  let randIdx = Math.floor(Math.random() * SUITS.length);
-  let randIdx2 = Math.floor(Math.random() * SUIT_KEYS.length);
-  let suit = [SUITS[randIdx]];
-  let key =  [SUIT_KEYS[randIdx2]];
-  val = deck[suit][key];
+
+function randomize(suitOrCardkey) {
+  let randomIndex = Math.floor(Math.random() * suitOrCardkey.length);
+  return suitOrCardkey[randomIndex];
+}
+
+function drawRandomCard(deck) {
   if (!isDeckEmpty(deck)) {
-    while (val === undefined) {
-      randIdx = Math.floor(Math.random() * SUITS.length);
-      randIdx2 = Math.floor(Math.random() * SUIT_KEYS.length);
-      suit = [SUITS[randIdx]];
-      key =  [SUIT_KEYS[randIdx2]];
-      val = deck[suit][key];
+    let suit = randomize(SUITS);
+    let ckey =  randomize(CARD_KEYS);
+    let card = deck[suit][ckey];
+    while (card === undefined) {
+      suit = randomize(SUITS);
+      ckey =  randomize(CARD_KEYS);
+      card = deck[suit][ckey];
     }
+    return Object.assign({}, {[suit] : {[ckey] : deck[suit][ckey]}});
   }
-    return Object.assign(card, {[suit] : {[key] : deck[SUITS[randIdx]][SUIT_KEYS[randIdx2]]}});
+  return {};
+}
+while (true) {
+  console.log("Welcome to twenty one. Good luck!");
+  let deck = initializeDeck();
+  let playerHand = initializeCards(2, deck);
+  let dealerHand = initializeCards(2, deck);
+  console.log("Dealer has: " + displayCards(getCards(dealerHand,"Dealer")));
+  console.log("You have: " + displayCards(getCards(playerHand)));
+
+  // write the main programm almost all helper functions are in place now
+
+  while (true) {
+    if (busted(playerHand)) break;
+    console.log("hit or stay?");
+    let answer = readline.question();
+    if (answer === 'stay') break;
+    hitMe(playerHand, deck);
+    console.log("You have: " + displayCards(getCards(playerHand)));
+  }
+
+  if (busted(playerHand)) {
+    console.log("Player busted! The house win!");
+    console.log("Play again? yY / nN");
+    let answer = readline.question();
+    if (answer === "y") continue;
+    if (answer === "n") break;
+  } else {
+    console.log("You chose to stay!");  // if player didn't bust, must have stayed to get here
+  }
+
+  while (true) {
+    if (seventeenStays(dealerHand) || busted(dealerHand)) break;
+    console.log("Dealer hits!");
+    hitMe(dealerHand, deck);
+  }
+  console.log(evaluateHand(dealerHand));
+  console.log(busted(dealerHand));
+  if (busted(dealerHand)) {
+    console.log("Dealer busted! You win!");
+    console.log("Play again? yY / nN");
+    let answer = readline.question();
+    if (answer === "y") continue;
+    if (answer === "n") break;
+    break;
+  } else {
+    console.log("Dealer chose to stay!");  // if player didn't bust, must have stayed to get here
+  }
+
+  console.log("Dealer has: " + displayCards(getCards(dealerHand)));
+  console.log("You have: " + displayCards(getCards(playerHand)));
+
+  console.log("The winner is:");
+  console.log(evaluateHand(playerHand));
+  console.log(evaluateHand(dealerHand));
+  let winner = determineWinner(playerHand, dealerHand);
+  console.log(winner);
+  console.log("Play again? yY / nN");
+  let answer = readline.question();
+  if (answer === "y") continue;
+  if (answer === "n") break;
+
 }
 
-for (let i = 0; i < 3; i++) {
-  if (isDeckEmpty(deck)) break;
-  hitMe(playerHand);
-  hitMe(dealerHand);
-  console.log(playerHand);
-  console.log("Player value: " + evaluateHand(playerHand));
-  console.log(dealerHand);
-  console.log("Dealer value: " + evaluateHand(dealerHand));
+console.log("Thank you for playing!");
 
+function busted(hand) {
+  return (evaluateHand(hand)) > TWENTY_ONE;
 }
 
+function seventeenStays(hand) {
+  if (evaluateHand(hand) >= DEALER_LIMIT) return true;
+  else return false;
+}
 
-//console.log(playerHand);
-//console.log('Player');
+function determineWinner(player, dealer) {
+  if (evaluateHand(player) === evaluateHand(dealer)) {
+    return "Both";
+  } else if (evaluateHand(player) > evaluateHand(dealer)) {
+    return "Player";
+  } else return "Dealer";
+}
 
-//console.log('Dealer');
-//console.log(dealerHand);
+function getCards(hand) {
+  let cardKeys = [];
+  let cards = Object.keys(hand).map(suit => Object.keys(hand[suit]));
+  cards.forEach(suit => suit.forEach(card => cardKeys.push(card)));
+  return cardKeys;
+}
 
-//console.log(count);
-
-/*dealerHand.heart = {};
-Object.assign(dealerHand.heart, {two : 2});
-Object.assign(dealerHand.heart, {three : 3});
-Object.assign(dealerHand.heart, {four : 4});
-
-console.log(dealerHand);
-*/
+function displayCards(cards, player = "") {
+  switch (player) {
+    case "Dealer": return cards[0] + " and unkown card.";
+    default: return cards.slice(0, cards.length - 1).join(", ") + " and " + cards[cards.length - 1] + ".";
+  }
+}
