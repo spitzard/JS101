@@ -28,9 +28,7 @@ while (true) {
 
   if (busted(playerHand)) {
     displayBusted("You");
-    displayPlayAgain();
-    let answer = readline.question();
-    if (playAgain(answer)) continue;
+    if (playAgain()) continue;
     else break;
   } else {
     console.log("\nYou chose to stay!");
@@ -46,11 +44,10 @@ while (true) {
 
   if (busted(dealerHand)) {
     displayBusted("Dealer");
-    displayPlayAgain();
-    let answer = readline.question();
-    if (playAgain(answer)) continue;
+    if (playAgain()) continue;
+    else break;
   } else {
-    console.log("\nDealer chose to stay!");
+    console.log("Dealer chose to stay!");
   }
 
   displayTurn("Showdown!");
@@ -59,12 +56,8 @@ while (true) {
 
   let winner = determineWinner(playerHand, dealerHand);
   displayWinner(winner);
-
-  displayPlayAgain();
-  let answer = readline.question();
-  if (playAgain(answer)) continue;
+  if (playAgain()) continue;
   else break;
-
 }
 
 displayTurn("Thank you for playing!");
@@ -100,14 +93,16 @@ function displayTurn(Message) {
 function displayBusted(player) {
   let wins = "The house wins!";
   if (player === "Dealer") wins = "You win!";
-  console.log(`\n${player} busted. ${wins}`);
+  console.log(`${player} busted. ${wins}`);
 }
 
 function displayPlayAgain() {
   console.log("\nPlay again? yes / no");
 }
 
-function playAgain(answer) {
+function playAgain() {
+  displayPlayAgain();
+  let answer = readline.question();
   while (true) {
     if (PLAYAGAIN_YES.includes(answer.toLowerCase())) return true;
     else if (PLAYAGAIN_NO.includes(answer.toLowerCase())) return false;
