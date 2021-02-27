@@ -7,16 +7,27 @@ const PLAYAGAIN_YES = ["y"];
 const PLAYAGAIN_NO = ["n"];
 const HIT_COMMAND = ["h"];
 const STAY_COMMAND = ["s"];
+const BESTOF = 5;
+const SCORE = {player : 0, dealer : 0};
 let readline = require('readline-sync');
 
 while (true) {
   console.clear();
-  displayTurn("Welcome to twenty one. Good luck!");
+  displayTurn("Welcome to Twenty-One. Good luck!");
+  displayMode();
   let playerTotal = 0;
   let dealerTotal = 0;
   let deck = initializeDeck();
   let playerHand = initializeCards(2, deck);
   let dealerHand = initializeCards(2, deck);
+  displayScore();
+  if (endMatch()) {
+    displayMatchWinner();
+    if (playAgain()) {
+      resetScore();
+      continue;
+    } else break;
+  }
   console.log("Cards have been dealt!\n");
   displayHands(playerHand, dealerHand, "Dealer");
   displayTurn("Your turn!");
@@ -31,8 +42,9 @@ while (true) {
   if (busted(playerTotal)) {
     displayBusted("You");
     displayOutcome(playerTotal, dealerTotal, playerHand, dealerHand);
-    if (playAgain()) continue;
-    else break;
+    updateScore(playerTotal, dealerTotal);
+    readline.question();
+    continue;
   } else {
     console.log("\nYou chose to stay!");
   }
@@ -49,19 +61,22 @@ while (true) {
   if (busted(dealerTotal)) {
     displayBusted("Dealer");
     displayOutcome(playerTotal, dealerTotal, playerHand, dealerHand);
-    if (playAgain()) continue;
-    else break;
+    updateScore(playerTotal, dealerTotal);
+    readline.question();
+    continue;
   } else {
     console.log("Dealer chose to stay!");
   }
 
   displayTurn("Showdown!");
   displayOutcome(playerTotal, dealerTotal, playerHand, dealerHand);
-  if (playAgain()) continue;
-  else break;
+  updateScore(playerTotal, dealerTotal);
+
+  readline.question();
+  continue;
 }
 
-displayTurn("Thank you for playing!");
+displayTurn("Thank you for playing Twenty-One! Best of luck!");
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -121,6 +136,48 @@ function playAgain() {
 
 function busted(total) {
   return total > TWENTY_ONE;
+}
+
+function updateScore(playerTotal, dealerTotal) {
+  let winner = determineWinner(playerTotal, dealerTotal);
+  switch (winner) {
+    case "You": SCORE.player += 1;
+      break;
+    case "Dealer": SCORE.dealer += 1;
+      break;
+  }
+}
+
+function displayMode() {
+  let games = "games";
+  if (BESTOF === 1) games = games.substr(0,4);
+  console.log(`Mode: ${BESTOF} ${games} to win the match.`);
+}
+
+function matchWinner() {
+  return SCORE.player > SCORE.dealer;
+}
+
+function displayMatchWinner() {
+  if (matchWinner()) {
+    console.log("Congratulations you won the match!\n");
+  } else console.log("The match is over! The house won, empty your pockets!\n");
+}
+
+function endMatch() {
+  return (SCORE.player >= BESTOF || SCORE.dealer >= BESTOF);
+}
+
+function resetScore() {
+  SCORE.player = 0;
+  SCORE.dealer = 0;
+}
+
+function displayScore() {
+  console.log("");
+  console.log("Your score: " + SCORE.player);
+  console.log("Dealer score: " + SCORE.dealer);
+  console.log("");
 }
 
 function seventeenStays(handTotal) {
