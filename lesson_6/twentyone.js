@@ -3,14 +3,157 @@ const CARD_KEYS = ['2','3','4','5','6','7','8','9','10','Jack','King','Queen','A
 const CARD_VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
 const TWENTY_ONE = 21;
 const DEALER_LIMIT = 17;
+const PLAYAGAIN_YES = ["yes", "y"];
+const PLAYAGAIN_NO = ["no", "n"];
 let readline = require('readline-sync');
+
+while (true) {
+  console.clear();
+  displayTurn("Welcome to twenty one. Good luck!");
+
+  let deck = initializeDeck();
+  let playerHand = initializeCards(2, deck);
+  let dealerHand = initializeCards(2, deck);
+  console.log("Cards have been dealt!\n");
+  displayHands(playerHand, dealerHand, "Dealer");
+  displayTurn("Your turn!");
+  while (true) {
+    if (busted(playerHand)) break;
+    console.log("hit or stay?");
+    let answer = readline.question();
+    if (answer === 'stay') break;
+    hitMe(playerHand, deck);
+    console.log("\nYou have: " + showCards(getCards(playerHand)));
+  }
+
+  if (busted(playerHand)) {
+    displayBusted("You");
+    displayPlayAgain();
+    let answer = readline.question();
+    if (playAgain(answer)) continue;
+    else break;
+  } else {
+    console.log("\nYou chose to stay!");
+  }
+
+  displayTurn("Dealer's turn!");
+
+  while (true) {
+    if (seventeenStays(dealerHand) || busted(dealerHand)) break;
+    console.log("Dealer hits!\n");
+    hitMe(dealerHand, deck);
+  }
+
+  if (busted(dealerHand)) {
+    displayBusted("Dealer");
+    displayPlayAgain();
+    let answer = readline.question();
+    if (playAgain(answer)) continue;
+  } else {
+    console.log("\nDealer chose to stay!");
+  }
+
+  displayTurn("Showdown!");
+
+  displayHands(playerHand, dealerHand);
+
+  let winner = determineWinner(playerHand, dealerHand);
+  displayWinner(winner);
+
+  displayPlayAgain();
+  let answer = readline.question();
+  if (playAgain(answer)) continue;
+  else break;
+
+}
+
+displayTurn("Thank you for playing!");
+
+///////////////////////////////////////////////////////////////////////////
+
+function displayWinner(winner) {
+  switch (winner) {
+    case "Both": console.log("\nIt is a tie!");
+      break;
+    case "You": console.log(`\n${winner} win. Congratulations!`);
+      break;
+    case "Dealer": console.log(`\n${winner} wins. Better luck next time!`);
+      break;
+  }
+}
+
+function displayHands(player, dealer, unknownCard = "") {
+  console.log("Dealer has: " + showCards(getCards(dealer),unknownCard));
+  console.log("You have: " + showCards(getCards(player)));
+}
+
+function displayTurn(Message) {
+  let count = Message.length;
+  let border = "=";
+  console.log("");
+  console.log(border.repeat(count));
+  console.log(Message);
+  console.log(border.repeat(count));
+  console.log("");
+}
+
+function displayBusted(player) {
+  let wins = "The house wins!";
+  if (player === "Dealer") wins = "You win!";
+  console.log(`\n${player} busted. ${wins}`);
+}
+
+function displayPlayAgain() {
+  console.log("\nPlay again? yes / no");
+}
+
+function playAgain(answer) {
+  while (true) {
+    if (PLAYAGAIN_YES.includes(answer.toLowerCase())) return true;
+    else if (PLAYAGAIN_NO.includes(answer.toLowerCase())) return false;
+    else {
+      console.log("Cannot recognize your choice. Play again? yes / no");
+      answer = readline.question();
+    }
+  }
+}
+
+function busted(hand) {
+  return (evaluateHand(hand)) > TWENTY_ONE;
+}
+
+function seventeenStays(hand) {
+  if (evaluateHand(hand) >= DEALER_LIMIT) return true;
+  else return false;
+}
+
+function determineWinner(player, dealer) {
+  if (evaluateHand(player) === evaluateHand(dealer)) {
+    return "Both";
+  } else if (evaluateHand(player) > evaluateHand(dealer)) {
+    return "You";
+  } else return "Dealer";
+}
+
+function getCards(hand) {
+  let cardKeys = [];
+  let cards = Object.keys(hand).map(suit => Object.keys(hand[suit]));
+  cards.forEach(suit => suit.forEach(card => cardKeys.push(card)));
+  return cardKeys;
+}
+
+function showCards(cards, unknownCard = "") {
+  switch (unknownCard) {
+    case "Dealer": return cards[0] + " and unkown card.";
+    default: return cards.slice(0, cards.length - 1).join(", ") + " and " + cards[cards.length - 1] + ".";
+  }
+}
 
 function initializeCards(number, deck) {
   let hand = {};
   for (let cards = 0; cards < number; cards++) hitMe(hand, deck);
   return hand;
 }
-
 
 function initializeDeck() {
   let deck = {};
@@ -78,7 +221,6 @@ function removeCardFromDeck(card, deck) {
   delete deck[Object.keys(card)][Object.keys(Object.values(card)[0])];
 }
 
-
 function randomize(suitOrCardkey) {
   let randomIndex = Math.floor(Math.random() * suitOrCardkey.length);
   return suitOrCardkey[randomIndex];
@@ -97,98 +239,4 @@ function drawRandomCard(deck) {
     return Object.assign({}, {[suit] : {[ckey] : deck[suit][ckey]}});
   }
   return {};
-}
-while (true) {
-  console.log("Welcome to twenty one. Good luck!");
-  let deck = initializeDeck();
-  let playerHand = initializeCards(2, deck);
-  let dealerHand = initializeCards(2, deck);
-  console.log("Dealer has: " + displayCards(getCards(dealerHand,"Dealer")));
-  console.log("You have: " + displayCards(getCards(playerHand)));
-
-  // write the main programm almost all helper functions are in place now
-
-  while (true) {
-    if (busted(playerHand)) break;
-    console.log("hit or stay?");
-    let answer = readline.question();
-    if (answer === 'stay') break;
-    hitMe(playerHand, deck);
-    console.log("You have: " + displayCards(getCards(playerHand)));
-  }
-
-  if (busted(playerHand)) {
-    console.log("Player busted! The house win!");
-    console.log("Play again? yY / nN");
-    let answer = readline.question();
-    if (answer === "y") continue;
-    if (answer === "n") break;
-  } else {
-    console.log("You chose to stay!");  // if player didn't bust, must have stayed to get here
-  }
-
-  while (true) {
-    if (seventeenStays(dealerHand) || busted(dealerHand)) break;
-    console.log("Dealer hits!");
-    hitMe(dealerHand, deck);
-  }
-  console.log(evaluateHand(dealerHand));
-  console.log(busted(dealerHand));
-  if (busted(dealerHand)) {
-    console.log("Dealer busted! You win!");
-    console.log("Play again? yY / nN");
-    let answer = readline.question();
-    if (answer === "y") continue;
-    if (answer === "n") break;
-    break;
-  } else {
-    console.log("Dealer chose to stay!");  // if player didn't bust, must have stayed to get here
-  }
-
-  console.log("Dealer has: " + displayCards(getCards(dealerHand)));
-  console.log("You have: " + displayCards(getCards(playerHand)));
-
-  console.log("The winner is:");
-  console.log(evaluateHand(playerHand));
-  console.log(evaluateHand(dealerHand));
-  let winner = determineWinner(playerHand, dealerHand);
-  console.log(winner);
-  console.log("Play again? yY / nN");
-  let answer = readline.question();
-  if (answer === "y") continue;
-  if (answer === "n") break;
-
-}
-
-console.log("Thank you for playing!");
-
-function busted(hand) {
-  return (evaluateHand(hand)) > TWENTY_ONE;
-}
-
-function seventeenStays(hand) {
-  if (evaluateHand(hand) >= DEALER_LIMIT) return true;
-  else return false;
-}
-
-function determineWinner(player, dealer) {
-  if (evaluateHand(player) === evaluateHand(dealer)) {
-    return "Both";
-  } else if (evaluateHand(player) > evaluateHand(dealer)) {
-    return "Player";
-  } else return "Dealer";
-}
-
-function getCards(hand) {
-  let cardKeys = [];
-  let cards = Object.keys(hand).map(suit => Object.keys(hand[suit]));
-  cards.forEach(suit => suit.forEach(card => cardKeys.push(card)));
-  return cardKeys;
-}
-
-function displayCards(cards, player = "") {
-  switch (player) {
-    case "Dealer": return cards[0] + " and unkown card.";
-    default: return cards.slice(0, cards.length - 1).join(", ") + " and " + cards[cards.length - 1] + ".";
-  }
 }
