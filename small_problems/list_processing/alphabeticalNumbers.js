@@ -2,18 +2,16 @@ const ALPHABETIC_NUMBERS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six'
   'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen',
   'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
 
+let integers = [0, 1, 2, 3, 4, 5, 6, 7,
+  8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
 
-function sorting(arr) {
-  let array = arr.slice();
-  let next = 0;
-  for (let idx = 0; idx < array.length; idx++) {
-    if (array[idx] > array[idx + 1 ]) {
-      next = array[idx];
-      array[idx] = array[idx + 1 ];
-      array[idx + 1 ] = next;
-    }
-  }
-  return array;
+function alphabeticNumberSort(array) {
+  return array.sort((a, b) => {
+    if (ALPHABETIC_NUMBERS[a] > ALPHABETIC_NUMBERS[b]) return 1;
+    else if (ALPHABETIC_NUMBERS[a] < ALPHABETIC_NUMBERS[b]) return -1;
+    else return 0;
+  });
 }
-
-console.log(sorting([8,2,5,1]));
+let integersSorted = alphabeticNumberSort(integers);
+console.log(integersSorted);
+console.log(ALPHABETIC_NUMBERS.sort());
