@@ -17,7 +17,6 @@ console.log(substrings("abcde"));
 
 function palindromes(string) {
   return substrings(string).filter(isPalindrome);
-
 }
 
 function isPalindrome(string) {
