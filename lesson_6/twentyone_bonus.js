@@ -3,11 +3,11 @@ const CARD_KEYS = ['2','3','4','5','6','7','8','9','10','Jack','King','Queen','A
 const CARD_VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
 const TWENTY_ONE = 21;
 const DEALER_LIMIT = 17;
-const PLAYAGAIN_YES = ["y"];
-const PLAYAGAIN_NO = ["n"];
-const HIT_COMMAND = ["h"];
-const STAY_COMMAND = ["s"];
-const BESTOF = 5;
+const PLAYAGAIN_YES = leadingSubstrings("yes");
+const PLAYAGAIN_NO = leadingSubstrings("no");
+const HIT_COMMAND = leadingSubstrings("hit");
+const STAY_COMMAND = leadingSubstrings("stay");
+const BESTOF = 1;
 const SCORE = {player : 0, dealer : 0};
 let readline = require('readline-sync');
 
@@ -76,7 +76,7 @@ while (true) {
   continue;
 }
 
-displayTurn("Thank you for playing Twenty-One! Best of luck!");
+displayTurn("Thank you for playing Twenty-One!");
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -310,4 +310,13 @@ function stayOrHit() {
       answer = readline.question();
     }
   }
+}
+
+function leadingSubstrings(string) {
+  let substrings = [];
+  string.split("").reduce((acc, char) => {
+    substrings.push(acc + char);
+    return acc + char;
+  },[]);
+  return substrings;
 }
