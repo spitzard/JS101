@@ -37,7 +37,6 @@ console.log(rotateArrayEX([]));                       // []
 console.log(rotateArrayEX());                         // undefined
 console.log(rotateArrayEX(1));                        // undefined
 
-
 let array = [1, 2, 3, 4];
 console.log(rotateArrayEX2(array));                    // [2, 3, 4, 1]
 console.log(array);                                 // [1, 2, 3, 4]
