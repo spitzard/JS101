@@ -25,6 +25,17 @@ function proceduralFibonacci(nth) {
   return fibonaccis[1];
 }
 
+let memo = {};
+function fibonacciMemo(nth) {
+  if (nth <= 2 ) return 1;
+  else if (memo[nth]) return memo[nth];
+  else {
+    memo[nth] =  fibonacci(nth - 1) + fibonacci(nth - 2);
+    return memo[nth];
+  }
+}
+
+
 console.log("RECURSIVE");
 console.log(fibonacci(1) === 1);
 console.log(fibonacci(2) === 1);
@@ -39,6 +50,14 @@ console.log(proceduralFibonacci(3) === 2);
 console.log(proceduralFibonacci(5) === 5);
 console.log(proceduralFibonacci(5) === 5);
 console.log(proceduralFibonacci(12) === 144);
+
+console.log("MEMOIZATION");
+console.log(fibonacciMemo(1) === 1);
+console.log(fibonacciMemo(2) === 1);
+console.log(fibonacciMemo(3) === 2);
+console.log(fibonacciMemo(4) === 3);
+console.log(fibonacciMemo(5) === 5);
+console.log(fibonacciMemo(12) === 144);
 
 
 /// example
