@@ -3,7 +3,7 @@ function fibonacci(nth) {
   return fibonacci(nth - 1) + fibonacci(nth - 2);
 }
 
-function proceduralFibonacci(nth) {
+/*function proceduralFibonacci(nth) {
   let F1 = 1;
   let F2 = 1;
   let Fn = 0;
@@ -14,6 +14,15 @@ function proceduralFibonacci(nth) {
     F2 = Fn;
   }
   return Fn;
+}
+*/
+
+function proceduralFibonacci(nth) {
+  let fibonaccis = [1, 1];
+  for (let pos = 2; pos < nth; pos++) {
+    fibonaccis = [fibonaccis[1], fibonaccis[0] + fibonaccis[1]];
+  }
+  return fibonaccis[1];
 }
 
 console.log("RECURSIVE");
