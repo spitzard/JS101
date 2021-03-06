@@ -1,17 +1,5 @@
 function bubbleSort(array) {
   for (let outer = 0; outer < array.length; outer++) {
-    for (let inner = 0; inner < array.length; inner++) {
-      if (array[inner] > array[inner + 1]) {
-        let swapped = array[inner + 1];
-        array[inner + 1] = array[inner];
-        array[inner] = swapped;
-      }
-    }
-  }
-}
-
-function betterBubbelSort(array) {
-  for (let outer = 0; outer < array.length; outer++) {
     let swapped = false;
     for (let inner = 0; inner < array.length; inner++) {
       if (array[inner] > array[inner + 1]) {
@@ -24,8 +12,6 @@ function betterBubbelSort(array) {
     }
   }
 }
-
-
 
 let array1 = [5, 3];
 bubbleSort(array1);
