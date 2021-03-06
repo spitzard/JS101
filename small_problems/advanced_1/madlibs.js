@@ -1,25 +1,33 @@
-const ADJECTIVES = ["quick", "lazy", "sleepy", "noisy", "hungry"];
-const NOUNS = ["fox", "dog", "head", "leg", "tail", "cat"];
-const VERBS = ["jumps", "lifts", "bites", "licks", "pats"];
-const ADVERBS = ["easily", "lazily", "noisily", "excitedly"];
-const KEYS = ["_ADJECTIVE_", "_NOUN_", "_VERB_", "_ADVERB_" ];
+const MADWORDS = {ADJECTIVES : ["quick", "lazy", "sleepy", "noisy", "hungry"],
+  NOUNS : ["fox", "dog", "head", "leg", "tail", "cat"],
+  VERBS : ["jumps", "lifts", "bites", "licks", "pats"],
+  ADVERBS : ["easily", "lazily", "noisily", "excitedly"]};
+const COUNTS = {ADJECTIVES : 0, NOUNS  : 0,  VERBS : 0, ADVERBS : 0, };
 
 function madlibs(template) {
-  let newU = template;
-  template.split(" ").forEach(_ => {
-    newU = newU.replace(/_ADJECTIVE_/, randomize(ADJECTIVES));
-    newU = newU.replace(/_NOUN_/, randomize(NOUNS));
-    newU = newU.replace(/_VERB_/, randomize(VERBS));
-    newU = newU.replace(/_ADVERB_/, randomize(ADVERBS));
+  let filled = template;
+  filterPlaceholder(template);
+  Object.entries(COUNTS).forEach( function(entries) {
+    for (entries[1]; entries[1] > 0; entries[1]--) {
+      let regex = new RegExp("\\b" + entries[0] + "\\b");
+      filled = filled.replace(regex, randomize((MADWORDS[entries[0]])));
+    }
   });
-  console.log(newU);
+  console.log(filled);
 }
-
 
 function randomize(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-let template1 = "The _ADJECTIVE_ _NOUN_ _VERB_ the _ADJECTIVE_ dog, while the dog _ADVERB_ _VERB_ the _NOUN_ sandwich.";
+function filterPlaceholder(template) {
+  Object.keys(COUNTS).forEach(madword => {
+    let regex = new RegExp("\\b" + madword + "\\b",'g');
+    COUNTS[madword] = template.match(regex).length;
+  });
+}
+
+let template1 = "The ADJECTIVES NOUNS VERBS the ADJECTIVES dog, while the dog ADVERBS VERBS the NOUNS sandwich.";
 
 madlibs(template1);
+//filterPlaceholder(template1);
