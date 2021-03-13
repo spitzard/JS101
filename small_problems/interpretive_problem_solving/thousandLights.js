@@ -1,9 +1,9 @@
 function lightsOn(switches) {
-  let lightStatus = Array.from({length: switches }, (_ => "on"));
+  let lightStatus = Array.from({length: switches + 1}, (_ => "on"));
   lightStatus[0] = undefined;
-  for (let pass = 0; pass < switches; pass++) {
-    for (let light = 1; light <= switches; light++) {
-      if ((light) % pass === 0 && pass > 1) {
+  for (let pass = 1; pass < switches + 1; pass++) {
+    for (let light = 1; light < switches + 1; light++) {
+      if (light % pass === 0 && pass > 1 ) {
         if (lightStatus[light] === "on") lightStatus[light] = "off";
         else lightStatus[light] = "on";
       }
@@ -29,7 +29,7 @@ function lightsOnLS(count) {
     }
   }
 
-  return result
+  return result;
 }
 
 function initializeLights(count) {
@@ -48,7 +48,9 @@ function toggleLights(lights, round) {
  });
 }
 
+console.log(lightsOn(100));
 console.log(lightsOn(100).join("") === lightsOnLS(100).join(""));
 console.log(lightsOn(6).join("") === lightsOnLS(6).join(""));
 console.log(lightsOn(78).join("") === lightsOnLS(78).join(""));
 console.log(lightsOn(12).join("") === lightsOnLS(12).join(""));
+console.log(lightsOn(1).join("") === lightsOnLS(1).join(""));
