@@ -1,10 +1,13 @@
 function longestSentence(text) {
   let regex = new RegExp( /[^.!?]+[.!?]+/g );
   let sentences =  text.match(regex);
-  let longestSentence = sentences.sort((a, b) => b.length - a.length)[0];
-  let count = longestSentence.trim().split(" ").length;
-  console.log(longestSentence.trim() + "\n\nThe longest sentence has " + count + " words");
+  sentences = sentences.map(sentence => sentence.trim());
+  let wordsInSentence = sentences.map(sentence => sentence.split(" "));
+  let longestSentence = wordsInSentence.sort((a, b) => b.length - a.length)[0];
+  let wordCount = longestSentence.length;
+  console.log(longestSentence.join(" ") + "\n\nThe longest sentence has " + wordCount + " words");
 }
+
 
 let longText =
   'Four score and seven years ago our fathers brought forth on this ' +
